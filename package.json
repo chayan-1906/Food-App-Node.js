@@ -15,7 +15,6 @@
     "Mongoose",
     "Role-Based",
     "Access",
-    "API",
     "Security",
     "Backend",
     "Development",
@@ -23,12 +22,10 @@
     "Panel",
     "User",
     "Management",
-    "Restaurant",
-    "API"
+    "Restaurant"
   ],
   "license": "ISC",
   "author": "Padmanabha Das",
-  "type": "module",
   "main": "server.ts",
   "scripts": {
     "build": "tsc",
