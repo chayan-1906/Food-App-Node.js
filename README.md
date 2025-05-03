@@ -1,0 +1,23 @@
+# Food App
+## 🍽️ Node.js REST API for a Restaurant App using Express, MongoDB, and JWT – includes auth, CRUD, and admin features 🔐📦
+
+
+# Dependencies
+
+### Express - https://www.npmjs.com/package/express
+    npm i express
+
+### Nodemon - https://www.npmjs.com/package/nodemon
+    npm i -g nodemon
+
+### Colors - https://www.npmjs.com/package/colors
+    npm i colors
+
+### Morgan - https://www.npmjs.com/package/morgan
+    npm i morgan
+
+### Cors - https://www.npmjs.com/package/cors
+    npm i cors
+
+### Dotenv - https://www.npmjs.com/package/dotenv
+    npm i dotenv
