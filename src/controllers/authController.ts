@@ -1,9 +1,10 @@
-import {ApiResponse} from "../utils/apiResponse.js";
-import {generateMissingCode} from "../utils/generateErrorCodes.js";
-import {isStringInvalid} from "../routes/helpers.js";
-import UserModel from "../models/UserModel.js";
+import {Request, Response} from "express";
+import {ApiResponse} from "../utils/apiResponse";
+import {generateMissingCode} from "../utils/generateErrorCodes";
+import {isStringInvalid} from "../routes/helpers";
+import UserModel from "../models/UserModel";
 
-const registerController = async (req, res) => {
+const registerController = async (req: Request, res: Response) => {
     try {
         const {userName, email, password, phone, address} = req.body;
 
@@ -46,7 +47,7 @@ const registerController = async (req, res) => {
 
         // check user
         const existingUser = await UserModel.findOne({email});
-        console.log('existingUser:'.bold.bgBlue, existingUser);
+        console.log('existingUser:'.bgBlue.bold, existingUser);
         if (existingUser) {
             return res.status(400).send(new ApiResponse({
                 success: false,

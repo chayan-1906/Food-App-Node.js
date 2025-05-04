@@ -1,4 +1,6 @@
-function testUserController(req, res) {
+import {Request, Response} from "express";
+
+function testUserController(req: Request, res: Response) {
     try {
         res.status(200).send({
             success: true,

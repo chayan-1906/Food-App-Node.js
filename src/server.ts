@@ -2,16 +2,16 @@ import express from 'express';
 import 'colors';
 import cors from 'cors';
 import morgan from 'morgan';
-import {PORT} from "./config/config.js";
-import {connectDB} from "./config/db.js";
-import testRoutes from './routes/testRoutes.js';
-import authRoutes from "./routes/authRoutes.js";
+import {PORT} from "./config/config";
+import {connectDB} from "./config/db";
+import testRoutes from './routes/testRoutes';
+import authRoutes from "./routes/authRoutes";
 
 // rest object
 const app = express();
 
 // db connection
-await connectDB();
+connectDB();
 
 // middlewares
 app.use(cors());
