@@ -5,8 +5,7 @@ function testUserController(req, res) {
             message: 'test user data API',
         });
     } catch (error) {
-        // console.log('inside catch of testUserController:'.bgRed.white.bold, error);
-        console.log(`Server Running on`.bgMagenta.white.italic);
+        console.log('inside catch of testUserController:'.bgRed.white.bold, error);
     }
 }
 

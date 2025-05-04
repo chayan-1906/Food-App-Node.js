@@ -25,3 +25,6 @@ https://dashboard.render.com/web/srv-d0bml1pr0fns73dklpqg
 
 ### Dotenv - https://www.npmjs.com/package/dotenv
     npm i dotenv
+
+### Mongoose - https://www.npmjs.com/package/mongoose, https://mongoosejs.com/docs/guide.html
+    npm i mongoose

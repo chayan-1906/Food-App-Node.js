@@ -3,10 +3,15 @@ import 'colors';
 import cors from 'cors';
 import morgan from 'morgan';
 import {PORT} from "./config/config.js";
+import {connectDB} from "./config/db.js";
 import testRoutes from './routes/testRoutes.js';
+import authRoutes from "./routes/authRoutes.js";
 
 // rest object
 const app = express();
+
+// db connection
+await connectDB();
 
 // middlewares
 app.use(cors());
@@ -18,6 +23,7 @@ app.use(morgan('dev'));
 });*/
 
 app.use('/api/v1/test', testRoutes);
+app.use('/api/v1/auth', authRoutes);
 
 app.get('/', function (req, res) {
     res.status(200).send('<h1>Welcome to Food App Server</h1>');
