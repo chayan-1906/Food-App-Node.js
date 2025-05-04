@@ -2,8 +2,8 @@ import express from 'express';
 import 'colors';
 import cors from 'cors';
 import morgan from 'morgan';
-import {PORT} from "./config/config";
-import testRoutes from './routes/testRoutes';
+import {PORT} from "./config/config.ts";
+import testRoutes from './routes/testRoutes.ts';
 
 // rest object
 const app = express();
@@ -23,6 +23,8 @@ app.get('/', function (req, res) {
     res.status(200).send('<h1>Welcome to Food App Server</h1>');
 });
 
-app.listen(PORT, () => {
-    console.log(`Server Running on ${PORT}`.bgMagenta.white.italic);
+const port = PORT || 3000;
+
+app.listen(port, () => {
+    console.log(`Server Running on ${port}`.bgMagenta.white.italic);
 });

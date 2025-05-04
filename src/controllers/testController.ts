@@ -1,4 +1,4 @@
-import {Request, Response} from 'express';
+import type {Request, Response} from 'express';
 
 function testUserController(req: Request, res: Response) {
     try {
@@ -7,7 +7,8 @@ function testUserController(req: Request, res: Response) {
             message: 'test user data API',
         });
     } catch (error: any) {
-        console.log('inside catch of testUserController:'.bgRed.white.bold, error);
+        // console.log('inside catch of testUserController:'.bgRed.white.bold, error);
+        console.log(`Server Running on`.bgMagenta.white.italic);
     }
 }
 
