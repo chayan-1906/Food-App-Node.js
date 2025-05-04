@@ -2,8 +2,8 @@ import express from 'express';
 import 'colors';
 import cors from 'cors';
 import morgan from 'morgan';
-import {PORT} from "./config/config.ts";
-import testRoutes from './routes/testRoutes.ts';
+import {PORT} from "./config/config.js";
+import testRoutes from './routes/testRoutes.js';
 
 // rest object
 const app = express();

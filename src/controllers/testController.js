@@ -1,12 +1,10 @@
-import type {Request, Response} from 'express';
-
-function testUserController(req: Request, res: Response) {
+function testUserController(req, res) {
     try {
         res.status(200).send({
             success: true,
             message: 'test user data API',
         });
-    } catch (error: any) {
+    } catch (error) {
         // console.log('inside catch of testUserController:'.bgRed.white.bold, error);
         console.log(`Server Running on`.bgMagenta.white.italic);
     }
