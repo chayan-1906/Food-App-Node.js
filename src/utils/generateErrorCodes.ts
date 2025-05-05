@@ -3,4 +3,10 @@ const generateMissingCode = (missingField: string) => {
     else return '';
 }
 
-export {generateMissingCode};
+const generateNotFound = (model: string) => {
+    if (model) return `${model.toUpperCase()}_NOT_FOUND`;
+    else return '';
+}
+
+
+export {generateMissingCode, generateNotFound};

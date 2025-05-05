@@ -1,8 +1,11 @@
 import {Request, Response} from "express";
 import {ApiResponse} from "../utils/apiResponse";
-import {generateMissingCode} from "../utils/generateErrorCodes";
+import {generateMissingCode, generateNotFound} from "../utils/generateErrorCodes";
 import {isStringInvalid} from "../routes/helpers";
 import UserModel from "../models/UserModel";
+import bcrypt from 'bcryptjs';
+import JWT from 'jsonwebtoken';
+import {JWT_SECRET} from "../config/config";
 
 const registerController = async (req: Request, res: Response) => {
     try {
@@ -47,7 +50,7 @@ const registerController = async (req: Request, res: Response) => {
 
         // check user
         const existingUser = await UserModel.findOne({email});
-        console.log('existingUser:'.bgBlue.bold, existingUser);
+        console.log('existingUser:'.bgBlue.white.bold, existingUser);
         if (existingUser) {
             return res.status(400).send(new ApiResponse({
                 success: false,
@@ -56,15 +59,18 @@ const registerController = async (req: Request, res: Response) => {
             }));
         }
 
+        // hashing password
+        const hashedPassword = await bcrypt.hash(password, bcrypt.genSaltSync(10));
+
         // create new user
-        const user = await UserModel.create({userName, email, password, phone, address});
+        const user = await UserModel.create({userName, email, password: hashedPassword, phone, address});
 
         res.status(201).send(new ApiResponse({
             success: true,
             message: 'User successfully registered',
             user,
         }));
-    } catch (error) {
+    } catch (error: any) {
         console.log('Error in registerController:'.bgRed.white.bold, error);
         res.status(500).send(new ApiResponse({
             success: false,
@@ -74,4 +80,61 @@ const registerController = async (req: Request, res: Response) => {
     }
 }
 
-export {registerController};
+const loginController = async (req: Request, res: Response) => {
+    try {
+        const {email, password} = req.body;
+
+        // validation
+        if (isStringInvalid(email)) {
+            return res.status(400).send(new ApiResponse({
+                success: false,
+                errorCode: generateMissingCode('email'),
+                errorMsg: 'Email is missing',
+            }));
+        }
+        if (isStringInvalid(password)) {
+            return res.status(400).send(new ApiResponse({
+                success: false,
+                errorCode: generateMissingCode('password'),
+                errorMsg: 'Password is missing',
+            }));
+        }
+
+        // check user password | compare password
+        const userByEmail = await UserModel.findOne({email});
+        console.log('userByEmail:'.bgBlue.white.bold, userByEmail);
+        if (!userByEmail) {
+            return res.status(404).send(new ApiResponse({
+                success: false,
+                errorCode: generateNotFound('user'),
+                errorMsg: 'User not found',
+            }));
+        }
+        const isMatched = await bcrypt.compare(password, userByEmail.password);
+        if (!isMatched) {
+            return res.status(400).send(new ApiResponse({
+                success: false,
+                errorCode: 'INVALID_CREDENTIALS',
+                errorMsg: 'Invalid credentials',
+            }));
+        }
+
+        // TODO: Hide password from response user object
+        const token = JWT.sign({id: userByEmail._id, email: userByEmail.email}, JWT_SECRET!, {expiresIn: '30d'});
+        res.status(200).send(new ApiResponse({
+            success: true,
+            message: 'Login successful',
+            user: userByEmail,
+            token,
+        }));
+    } catch (error: any) {
+        console.log('Error in loginController:'.bgRed.white.bold, error);
+        res.status(500).send(new ApiResponse({
+            success: false,
+            error,
+            errorMsg: 'Something went wrong',
+        }));
+    }
+}
+
+export {registerController, loginController};
