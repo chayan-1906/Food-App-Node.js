@@ -119,7 +119,7 @@ const loginController = async (req: Request, res: Response) => {
             }));
         }
 
-        // TODO: Hide password from response user object
+        // TODO: Hide password from response user object, change the field name from _id to userId
         const token = JWT.sign({id: userByEmail._id, email: userByEmail.email}, JWT_SECRET!, {expiresIn: '30d'});
         res.status(200).send(new ApiResponse({
             success: true,
