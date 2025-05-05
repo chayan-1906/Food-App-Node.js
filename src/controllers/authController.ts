@@ -110,6 +110,7 @@ const loginController = async (req: Request, res: Response) => {
                 errorMsg: 'User not found',
             }));
         }
+        console.log('password:'.bgBlack.white, userByEmail.password);
         const isMatched = await bcrypt.compare(password, userByEmail.password);
         if (!isMatched) {
             return res.status(400).send(new ApiResponse({
