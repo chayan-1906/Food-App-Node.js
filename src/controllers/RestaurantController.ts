@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import {ApiResponse} from "../utils/ApiResponse";
-import {generateInvalid, generateMissingCode, generateNotFound} from "../utils/generateErrorCodes";
-import {isStringInvalid} from "../utils/Helpers";
+import {generateInvalidCode, generateMissingCode, generateNotFoundCode} from "../utils/generateErrorCodes";
+import {isListEmpty, isStringInvalid} from "../utils/Helpers";
 import RestaurantSchema from "../models/RestaurantSchema";
 
 const createRestaurantController = async (req: Request, res: Response) => {
@@ -17,10 +17,21 @@ const createRestaurantController = async (req: Request, res: Response) => {
                 errorMsg: 'Restaurant title is missing',
             }));
         }
+        if (!isListEmpty(foods)) {
+            for (const {dishName, price, dishImage} of foods) {
+                if (isStringInvalid(dishName) || price == null || price <= 0 || isStringInvalid(dishImage)) {
+                    return res.status(400).send(new ApiResponse({
+                        success: false,
+                        errorCode: generateInvalidCode('foods'),
+                        errorMsg: 'Invalid foods - Each food item should have `dishName`, `price`, `dishImage`',
+                    }));
+                }
+            }
+        }
         if (!coords) {
             return res.status(400).send(new ApiResponse({
                 success: false,
-                errorCode: generateInvalid('coords'),
+                errorCode: generateInvalidCode('coords'),
                 errorMsg: 'Invalid coordinated',
             }));
         }
@@ -80,7 +91,7 @@ const getRestaurantByIdController = async (req: Request, res: Response) => {
         if (!restaurant) {
             return res.status(404).send(new ApiResponse({
                 success: false,
-                errorCode: generateNotFound('restaurant'),
+                errorCode: generateNotFoundCode('restaurant'),
                 errorMsg: 'Restaurant not found',
             }));
         }
@@ -115,7 +126,7 @@ const deleteRestaurantByIdController = async (req: Request, res: Response) => {
         if (!restaurant) {
             return res.status(404).send(new ApiResponse({
                 success: false,
-                errorCode: generateNotFound('restaurant'),
+                errorCode: generateNotFoundCode('restaurant'),
                 errorMsg: 'Restaurant not found',
             }));
         }

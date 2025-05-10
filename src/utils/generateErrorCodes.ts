@@ -3,15 +3,15 @@ const generateMissingCode = (missingField: string) => {
     else return '';
 }
 
-const generateNotFound = (model: string) => {
+const generateNotFoundCode = (model: string) => {
     if (model) return `${model.toUpperCase()}_NOT_FOUND`;
     else return '';
 }
 
-const generateInvalid = (model: string) => {
+const generateInvalidCode = (model: string) => {
     if (model) return `INVALID_${model.toUpperCase()}`;
     else return '';
 }
 
 
-export {generateMissingCode, generateNotFound, generateInvalid};
+export {generateMissingCode, generateNotFoundCode, generateInvalidCode};

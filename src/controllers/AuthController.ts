@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {ApiResponse} from "../utils/ApiResponse";
-import {generateInvalid, generateMissingCode, generateNotFound} from "../utils/generateErrorCodes";
+import {generateInvalidCode, generateMissingCode, generateNotFoundCode} from "../utils/generateErrorCodes";
 import {isStringInvalid} from "../utils/Helpers";
 import UserSchema from "../models/UserSchema";
 import bcrypt from 'bcryptjs';
@@ -113,7 +113,7 @@ const loginController = async (req: Request, res: Response) => {
         if (!userByEmail) {
             return res.status(404).send(new ApiResponse({
                 success: false,
-                errorCode: generateNotFound('user'),
+                errorCode: generateNotFoundCode('user'),
                 errorMsg: 'User not found',
             }));
         }
@@ -122,7 +122,7 @@ const loginController = async (req: Request, res: Response) => {
         if (!isMatched) {
             return res.status(400).send(new ApiResponse({
                 success: false,
-                errorCode: generateInvalid('credentials'),
+                errorCode: generateInvalidCode('credentials'),
                 errorMsg: 'Invalid credentials',
             }));
         }

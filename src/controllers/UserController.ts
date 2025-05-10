@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import {ApiResponse} from "../utils/ApiResponse";
 import UserSchema from "../models/UserSchema";
-import {generateInvalid, generateMissingCode, generateNotFound} from "../utils/generateErrorCodes";
+import {generateInvalidCode, generateMissingCode, generateNotFoundCode} from "../utils/generateErrorCodes";
 import {isStringInvalid} from "../utils/Helpers";
 import bcrypt from "bcryptjs";
 
@@ -17,7 +17,7 @@ const getUserController = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(404).send(new ApiResponse({
                 success: false,
-                errorCode: generateNotFound('user'),
+                errorCode: generateNotFoundCode('user'),
                 errorMsg: 'User not found',
             }));
         }
@@ -49,7 +49,7 @@ const updateUserController = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(404).send(new ApiResponse({
                 success: false,
-                errorCode: generateNotFound('user'),
+                errorCode: generateNotFoundCode('user'),
                 errorMsg: 'User not found',
             }));
         }
@@ -86,7 +86,7 @@ const updatePasswordController = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(404).send(new ApiResponse({
                 success: false,
-                errorCode: generateNotFound('user'),
+                errorCode: generateNotFoundCode('user'),
                 errorMsg: 'User not found',
             }));
         }
@@ -104,7 +104,7 @@ const updatePasswordController = async (req: Request, res: Response) => {
         if (!isMatched) {
             return res.status(400).send(new ApiResponse({
                 success: false,
-                errorCode: generateInvalid('password'),
+                errorCode: generateInvalidCode('password'),
                 errorMsg: 'Invalid password',
             }));
         }
@@ -163,7 +163,7 @@ const resetPasswordController = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(404).send(new ApiResponse({
                 success: false,
-                errorCode: generateNotFound('user'),
+                errorCode: generateNotFoundCode('user'),
                 errorMsg: 'User not found',
             }));
         }
@@ -171,7 +171,7 @@ const resetPasswordController = async (req: Request, res: Response) => {
         if (user.answer !== answer) {
             return res.status(400).send(new ApiResponse({
                 success: false,
-                errorCode: generateInvalid('answer'),
+                errorCode: generateInvalidCode('answer'),
                 errorMsg: 'Invalid answer',
             }));
         }
@@ -209,7 +209,7 @@ const deleteAccountController = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(404).send(new ApiResponse({
                 success: false,
-                errorCode: generateNotFound('user'),
+                errorCode: generateNotFoundCode('user'),
                 errorMsg: 'User not found',
             }));
         }

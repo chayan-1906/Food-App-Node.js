@@ -1,11 +1,16 @@
 import mongoose, {Model} from "mongoose";
 
+export interface IFood {
+    dishName: string;
+    price: number;
+    dishImage: string;
+}
+
 export interface IRestaurant extends Document {
-    restaurantId?: string;
-    // restaurantId?: string;
+    restaurantId: string;
     title: string;
     imageUrl: string;
-    foods: [];
+    foods: IFood[];
     time: string;
     pickup: boolean;
     delivery: boolean;
