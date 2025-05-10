@@ -4,9 +4,10 @@ import cors from 'cors';
 import morgan from 'morgan';
 import {PORT} from "./config/config";
 import {connectDB} from "./config/db";
-import testRoutes from './routes/testRoutes';
-import authRoutes from "./routes/authRoutes";
-import userRoutes from "./routes/userRoutes";
+import testRoutes from './routes/TestRoutes';
+import authRoutes from "./routes/AuthRoutes";
+import userRoutes from "./routes/UserRoutes";
+import restaurantRoutes from "./routes/RestaurantRoutes";
 
 // rest object
 const app = express();
@@ -26,6 +27,7 @@ app.use(morgan('dev'));
 app.use('/api/v1/test', testRoutes);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/restaurant', restaurantRoutes);
 
 app.get('/', function (req, res) {
     res.status(200).send('<h1>Welcome to Food App Server</h1>');

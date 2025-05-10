@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
-import {ApiResponse} from "../utils/apiResponse";
-import UserModel from "../models/UserModel";
+import {ApiResponse} from "../utils/ApiResponse";
+import UserSchema from "../models/UserSchema";
 import {generateInvalid, generateMissingCode, generateNotFound} from "../utils/generateErrorCodes";
-import {isStringInvalid} from "../routes/helpers";
+import {isStringInvalid} from "../utils/Helpers";
 import bcrypt from "bcryptjs";
 
 const getUserController = async (req: Request, res: Response) => {
@@ -11,7 +11,7 @@ const getUserController = async (req: Request, res: Response) => {
         const {id} = req.body;
 
         // find user
-        const user = await UserModel.findById(id);
+        const user = await UserSchema.findById(id);
 
         // validation
         if (!user) {
@@ -43,7 +43,7 @@ const updateUserController = async (req: Request, res: Response) => {
         const {id, userName, phone, address} = req.body;
 
         // find user
-        const user = await UserModel.findById(id);
+        const user = await UserSchema.findById(id);
 
         // validation
         if (!user) {
@@ -82,7 +82,7 @@ const updatePasswordController = async (req: Request, res: Response) => {
         const {id, oldPassword, newPassword} = req.body;
 
         // find user
-        const user = await UserModel.findById(id);
+        const user = await UserSchema.findById(id);
         if (!user) {
             return res.status(404).send(new ApiResponse({
                 success: false,
@@ -159,7 +159,7 @@ const resetPasswordController = async (req: Request, res: Response) => {
         }
 
         // find user
-        const user = await UserModel.findOne({email});
+        const user = await UserSchema.findOne({email});
         if (!user) {
             return res.status(404).send(new ApiResponse({
                 success: false,
@@ -203,7 +203,7 @@ const deleteAccountController = async (req: Request, res: Response) => {
         const {id} = req.body;
 
         // find user
-        const user = await UserModel.findByIdAndDelete(id);
+        const user = await UserSchema.findByIdAndDelete(id);
 
         // validation
         if (!user) {

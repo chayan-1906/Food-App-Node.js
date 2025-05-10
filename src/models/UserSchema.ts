@@ -1,6 +1,8 @@
 import mongoose, {Model} from "mongoose";
 
 export interface IUser extends Document {
+    userId: string;
+    // userId?: string;
     userName: string;
     email: string;
     password: string;
@@ -67,7 +69,7 @@ const userSchema = new mongoose.Schema({
             return ret;
         },
     },
-})
+});
 
 const UserModel: IUserModel = mongoose.model<IUser, IUserModel>('User', userSchema);
 

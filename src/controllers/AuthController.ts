@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
-import {ApiResponse} from "../utils/apiResponse";
+import {ApiResponse} from "../utils/ApiResponse";
 import {generateInvalid, generateMissingCode, generateNotFound} from "../utils/generateErrorCodes";
-import {isStringInvalid} from "../routes/helpers";
-import UserModel from "../models/UserModel";
+import {isStringInvalid} from "../utils/Helpers";
+import UserSchema from "../models/UserSchema";
 import bcrypt from 'bcryptjs';
 import JWT from 'jsonwebtoken';
 import {JWT_SECRET} from "../config/config";
@@ -56,7 +56,7 @@ const registerController = async (req: Request, res: Response) => {
         }
 
         // check user
-        const existingUser = await UserModel.findOne({email});
+        const existingUser = await UserSchema.findOne({email});
         console.log('existingUser:'.bgBlue.white.bold, existingUser);
         if (existingUser) {
             return res.status(400).send(new ApiResponse({
@@ -70,12 +70,12 @@ const registerController = async (req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(password, bcrypt.genSaltSync(10));
 
         // create new user
-        const user = await UserModel.create({userName, email, password: hashedPassword, address, phone, answer});
+        const savedUser = await UserSchema.create({userName, email, password: hashedPassword, address, phone, answer});
 
         res.status(201).send(new ApiResponse({
             success: true,
             message: 'User has been registered',
-            user,
+            user: savedUser,
         }));
     } catch (error: any) {
         console.log('Error in registerController:'.bgRed.white.bold, error);
@@ -108,7 +108,7 @@ const loginController = async (req: Request, res: Response) => {
         }
 
         // check user password | compare password
-        const userByEmail = await UserModel.findOne({email});
+        const userByEmail = await UserSchema.findOne({email});
         console.log('userByEmail:'.bgBlue.white.bold, userByEmail);
         if (!userByEmail) {
             return res.status(404).send(new ApiResponse({

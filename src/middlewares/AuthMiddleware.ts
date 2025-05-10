@@ -1,8 +1,8 @@
 import {NextFunction, Request, Response} from "express";
 import JWT from "jsonwebtoken";
 import {JWT_SECRET} from "../config/config";
-import {ApiResponse} from "../utils/apiResponse";
-import {isStringInvalid} from "../routes/helpers";
+import {ApiResponse} from "../utils/ApiResponse";
+import {isStringInvalid} from "../utils/Helpers";
 import {generateMissingCode} from "../utils/generateErrorCodes";
 
 interface AuthRequest extends Request {
