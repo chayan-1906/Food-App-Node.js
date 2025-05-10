@@ -1,8 +1,9 @@
 import {Request, Response} from "express";
 import {ApiResponse} from "../utils/apiResponse";
 import UserModel from "../models/UserModel";
-import {generateNotFound} from "../utils/generateErrorCodes";
+import {generateInvalid, generateMissingCode, generateNotFound} from "../utils/generateErrorCodes";
 import {isStringInvalid} from "../routes/helpers";
+import bcrypt from "bcryptjs";
 
 const getUserController = async (req: Request, res: Response) => {
     try {
@@ -20,8 +21,6 @@ const getUserController = async (req: Request, res: Response) => {
                 errorMsg: 'User not found',
             }));
         }
-
-        // TODO: Hide password from response user object, change the field name from _id to userId
 
         return res.status(200).send(new ApiResponse({
             success: true,
@@ -64,7 +63,7 @@ const updateUserController = async (req: Request, res: Response) => {
 
         return res.status(200).send(new ApiResponse({
             success: true,
-            message: 'User updated',
+            message: 'User has been updated',
             user,
         }));
     } catch (error: any) {
@@ -77,4 +76,156 @@ const updateUserController = async (req: Request, res: Response) => {
     }
 }
 
-export {getUserController, updateUserController};
+const updatePasswordController = async (req: Request, res: Response) => {
+    try {
+        console.log('requestBody:'.bgYellow.bold, req.body);
+        const {id, oldPassword, newPassword} = req.body;
+
+        // find user
+        const user = await UserModel.findById(id);
+        if (!user) {
+            return res.status(404).send(new ApiResponse({
+                success: false,
+                errorCode: generateNotFound('user'),
+                errorMsg: 'User not found',
+            }));
+        }
+
+        // validation
+        if (isStringInvalid(oldPassword) || isStringInvalid(newPassword)) {
+            return res.status(400).send(new ApiResponse({
+                success: false,
+                errorCode: generateMissingCode('password'),
+                errorMsg: 'Old or new password is/are missing',
+            }));
+        }
+
+        const isMatched = await bcrypt.compare(oldPassword, user.password);
+        if (!isMatched) {
+            return res.status(400).send(new ApiResponse({
+                success: false,
+                errorCode: generateInvalid('password'),
+                errorMsg: 'Invalid password',
+            }));
+        }
+
+        // hashing password
+        const hashedPassword = await bcrypt.hash(newPassword, bcrypt.genSaltSync(10));
+        user.password = hashedPassword;
+
+        // save user
+        await user.save();
+
+        return res.status(200).send(new ApiResponse({
+            success: true,
+            message: 'Password has been updated',
+        }));
+    } catch (error: any) {
+        console.log('Error in resetPasswordController:'.bgRed.white.bold, error);
+        res.status(500).send(new ApiResponse({
+            success: false,
+            error,
+            errorMsg: 'Something went wrong',
+        }));
+    }
+}
+
+const resetPasswordController = async (req: Request, res: Response) => {
+    try {
+        console.log('requestBody:'.bgYellow.bold, req.body);
+        const {email, password, answer} = req.body;
+
+        // validation
+        if (isStringInvalid(email)) {
+            return res.status(400).send(new ApiResponse({
+                success: false,
+                errorCode: generateMissingCode('email'),
+                errorMsg: 'Email is missing',
+            }));
+        }
+        if (isStringInvalid(password)) {
+            return res.status(400).send(new ApiResponse({
+                success: false,
+                errorCode: generateMissingCode('password'),
+                errorMsg: 'Password is missing',
+            }));
+        }
+        if (isStringInvalid(answer)) {
+            return res.status(400).send(new ApiResponse({
+                success: false,
+                errorCode: generateMissingCode('answer'),
+                errorMsg: 'Answer is missing',
+            }));
+        }
+
+        // find user
+        const user = await UserModel.findOne({email});
+        if (!user) {
+            return res.status(404).send(new ApiResponse({
+                success: false,
+                errorCode: generateNotFound('user'),
+                errorMsg: 'User not found',
+            }));
+        }
+
+        if (user.answer !== answer) {
+            return res.status(400).send(new ApiResponse({
+                success: false,
+                errorCode: generateInvalid('answer'),
+                errorMsg: 'Invalid answer',
+            }));
+        }
+
+        // hashing password
+        const hashedPassword = await bcrypt.hash(password, bcrypt.genSaltSync(10));
+        user.password = hashedPassword;
+
+        // save user
+        await user.save();
+
+        return res.status(200).send(new ApiResponse({
+            success: true,
+            message: 'Password has been reset',
+        }));
+    } catch (error: any) {
+        console.log('Error in resetPasswordController:'.bgRed.white.bold, error);
+        res.status(500).send(new ApiResponse({
+            success: false,
+            error,
+            errorMsg: 'Something went wrong',
+        }));
+    }
+}
+
+const deleteAccountController = async (req: Request, res: Response) => {
+    try {
+        console.log('requestBody:'.bgYellow.bold, req.body);
+        const {id} = req.body;
+
+        // find user
+        const user = await UserModel.findByIdAndDelete(id);
+
+        // validation
+        if (!user) {
+            return res.status(404).send(new ApiResponse({
+                success: false,
+                errorCode: generateNotFound('user'),
+                errorMsg: 'User not found',
+            }));
+        }
+
+        return res.status(200).send(new ApiResponse({
+            success: true,
+            message: 'User has been deleted',
+        }));
+    } catch (error: any) {
+        console.log('Error in deleteAccountController:'.bgRed.white.bold, error);
+        res.status(500).send(new ApiResponse({
+            success: false,
+            error,
+            errorMsg: 'Something went wrong',
+        }));
+    }
+}
+
+export {getUserController, updateUserController, updatePasswordController, resetPasswordController, deleteAccountController};

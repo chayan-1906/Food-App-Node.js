@@ -8,5 +8,10 @@ const generateNotFound = (model: string) => {
     else return '';
 }
 
+const generateInvalid = (model: string) => {
+    if (model) return `INVALID_${model.toUpperCase()}`;
+    else return '';
+}
 
-export {generateMissingCode, generateNotFound};
+
+export {generateMissingCode, generateNotFound, generateInvalid};

@@ -1,6 +1,6 @@
 import mongoose, {Model} from "mongoose";
 
-interface IUser extends Document {
+export interface IUser extends Document {
     userName: string;
     email: string;
     password: string;
@@ -8,6 +8,7 @@ interface IUser extends Document {
     phone: string;
     userType: 'client' | 'admin' | 'vendor' | 'driver';
     profile: string;
+    answer: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -50,6 +51,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png',
         // default: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/1200px-User_icon_2.svg.png',
+    },
+    answer: {
+        type: String,
+        required: [true, 'Answer is required'],
     },
 }, {
     timestamps: true,

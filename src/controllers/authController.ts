@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {ApiResponse} from "../utils/apiResponse";
-import {generateMissingCode, generateNotFound} from "../utils/generateErrorCodes";
+import {generateInvalid, generateMissingCode, generateNotFound} from "../utils/generateErrorCodes";
 import {isStringInvalid} from "../routes/helpers";
 import UserModel from "../models/UserModel";
 import bcrypt from 'bcryptjs';
@@ -9,7 +9,7 @@ import {JWT_SECRET} from "../config/config";
 
 const registerController = async (req: Request, res: Response) => {
     try {
-        const {userName, email, password, phone, address} = req.body;
+        const {userName, email, password, address, phone, answer} = req.body;
 
         // validation
         if (isStringInvalid(userName)) {
@@ -47,6 +47,13 @@ const registerController = async (req: Request, res: Response) => {
                 errorMsg: 'Phone is missing',
             }));
         }
+        if (isStringInvalid(answer)) {
+            return res.status(400).send(new ApiResponse({
+                success: false,
+                errorCode: generateMissingCode('answer'),
+                errorMsg: 'Answer is missing',
+            }));
+        }
 
         // check user
         const existingUser = await UserModel.findOne({email});
@@ -63,11 +70,11 @@ const registerController = async (req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(password, bcrypt.genSaltSync(10));
 
         // create new user
-        const user = await UserModel.create({userName, email, password: hashedPassword, phone, address});
+        const user = await UserModel.create({userName, email, password: hashedPassword, address, phone, answer});
 
         res.status(201).send(new ApiResponse({
             success: true,
-            message: 'User successfully registered',
+            message: 'User has been registered',
             user,
         }));
     } catch (error: any) {
@@ -115,12 +122,11 @@ const loginController = async (req: Request, res: Response) => {
         if (!isMatched) {
             return res.status(400).send(new ApiResponse({
                 success: false,
-                errorCode: 'INVALID_CREDENTIALS',
+                errorCode: generateInvalid('credentials'),
                 errorMsg: 'Invalid credentials',
             }));
         }
 
-        // TODO: Hide password from response user object, change the field name from _id to userId
         const token = JWT.sign({id: userByEmail._id, email: userByEmail.email}, JWT_SECRET!, {expiresIn: '30d'});
         res.status(200).send(new ApiResponse({
             success: true,
