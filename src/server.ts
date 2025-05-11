@@ -10,6 +10,7 @@ import userRoutes from "./routes/UserRoutes";
 import restaurantRoutes from "./routes/RestaurantRoutes";
 import categoryRoutes from "./routes/CategoryRoutes";
 import foodRoutes from "./routes/FoodRoutes";
+import orderRoutes from "./routes/OrderRoutes";
 
 // rest object
 const app = express();
@@ -32,6 +33,7 @@ app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/restaurant', restaurantRoutes);
 app.use('/api/v1/category', categoryRoutes);
 app.use('/api/v1/food', foodRoutes);
+app.use('/api/v1/order', orderRoutes);
 
 app.get('/', function (req, res) {
     res.status(200).send('<h1>Welcome to Food App Server</h1>');

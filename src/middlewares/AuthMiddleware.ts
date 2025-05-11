@@ -5,7 +5,7 @@ import {ApiResponse} from "../utils/ApiResponse";
 import {isStringInvalid} from "../utils/Helpers";
 import {generateMissingCode} from "../utils/generateErrorCodes";
 
-interface AuthRequest extends Request {
+export interface AuthRequest extends Request {
     body: {
         id?: string;
         email?: string;
@@ -16,6 +16,7 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
     try {
         // get token
         const token = req.headers['authorization']?.split(' ')[1];
+        console.log('token:'.bgBlack.yellow.italic, token);
         if (isStringInvalid(token)) {
             res.status(401).json(new ApiResponse({
                 success: false,
