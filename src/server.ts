@@ -27,7 +27,7 @@ app.use(morgan('dev'));
     return res.status(200).send('<h1>Welcome to Food App Server</h1>');
 });*/
 
-app.use('/api/v1/test', testRoutes);
+// app.use('/api/v1/test', testRoutes);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/restaurant', restaurantRoutes);
