@@ -10,7 +10,7 @@ const createCategoryController = async (req: Request, res: Response) => {
         const {title, imageUrl} = req.body;
 
         // validation
-        if (isStringInvalid(title) || equals(title.trim(), 'null')) {
+        if (isStringInvalid(title)) {
             return res.status(400).send(new ApiResponse({
                 success: false,
                 errorCode: generateMissingCode('title'),

@@ -32,11 +32,8 @@ const categorySchema = new mongoose.Schema({
 
             return {
                 categoryId: ret.categoryId,
-                title: ret.title,
-                imageUrl: ret.imageUrl,
-                createdAt: ret.createdAt,
-                updatedAt: ret.updatedAt,
-            };
+                ...ret,
+            } as ICategory;
         },
     },
 });

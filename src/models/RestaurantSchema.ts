@@ -99,7 +99,14 @@ const restaurantSchema = new mongoose.Schema({
             ret.restaurantId = ret._id;
             delete ret._id;
             delete ret.__v;
-            return ret;
+
+            return {
+                restaurantId: ret.restaurantId,
+                title: ret.title,
+                imageUrl: ret.imageUrl,
+                logoUrl: ret.logoUrl,
+                ...ret,
+            } as IRestaurant;
         },
     },
 });
